@@ -4,8 +4,6 @@ Repository for Kubernetes MOOC exercise submissions (DevOps with Kubernetes).
 ### Chapter 2
 <ul>
     <li>
-        <a href="">
-            <h4>1.1</h4>
-        </a>
+        <a href="https://github.com/opoussa/KubernetesSubmissions/tree/1.1"><b>1.1</b></a>
     </li>
 </ul>
