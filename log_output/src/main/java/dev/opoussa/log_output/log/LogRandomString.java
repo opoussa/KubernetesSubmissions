@@ -8,11 +8,10 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LogRandomString {
+    String random = UUID.randomUUID().toString();
 
     @Scheduled(fixedRate = 5000)
     void logRandomStringWithTimestamp() {
-        String random = UUID.randomUUID().toString();
-
-        System.out.println(random + " " + Instant.now());
+        System.out.println(Instant.now() + ": " + random);
     }
 }
