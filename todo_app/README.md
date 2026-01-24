@@ -1,45 +1,17 @@
-# todoapp 1.2
+# todoapp 1.4
 
 ### How to run
 
 Build the docker image:
 ```
-docker build -t todo_app:1.2 .
+docker build -t todo_app:latest .
 ```
 
-<br>
+Deploy image to the cluster using the new deployment manifest:
 
-Import the image to the cluster:
 ```
-k3d image import todo_app:1.2
+kubectl apply -f manifests/deployment.yaml
 ```
-
-<br>
-
-Create a deployment with the image:
-```
-kubectl create deployment todoapp-dep --image=todo_app:1.2
-```
-<br>
-
-Open the deployment manifest:
-```
-kubectl edit deployment todoapp-dep
-```
-
-...and set a `PORT` environment variable to a desired port:
-```yaml
-...
-    spec:
-        containers:
-        - env:
-            - name: PORT
-              value: "8082"
-          image: todo_app:1.2
-          imagePullPolicy: IfNotPresent
-...                                                               
-```
-<br>
 
 Check the deployment pod `name`:
 ```
