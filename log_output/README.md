@@ -3,27 +3,11 @@ Build the docker image:
 ```
 docker build -t log_output:latest .
 ```
-
 <br>
 
-Deploy to a cluster by creating a deployment:
+Deploy to a cluster by using the new deployment manifest file
 ```
-kubectl create deployment hashgenerator-dep --image=log_output:latest
-```
-<br>
-
-Edit the deployment manifest to use local images:
-```
-kubectl edit deployment hashgenerator-dep
-```
-
-...and change `imagePullPolicy` to `IfNotPresent`
-
-<br>
-
-Import the image to the cluster:
-```
-k3d image import log_output:latest
+kubectl apply -f manifests/deployment.yaml
 ```
 
 <br>
@@ -32,6 +16,7 @@ Check the deployment pod's `name`:
 ```
 kubectl get pods
 ```
+<br>
 
 And finally to see the output logs inside the pod:
 ```
