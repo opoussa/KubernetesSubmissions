@@ -4,7 +4,7 @@
 
 Build the docker image:
 ```
-docker build -t todo_app:latest .
+docker build -t todo_app:1.5 .
 ```
 
 Import image to k3d cluster if needed:
@@ -27,7 +27,7 @@ spec:
 ...
 ```
 
-Create deployment for the image to the cluster using deployment manifest:
+Create a deployment for the image to the cluster using deployment manifest:
 
 ```
 kubectl apply -f manifests/deployment.yaml
