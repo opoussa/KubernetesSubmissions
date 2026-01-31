@@ -6,16 +6,19 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: todoapp-dep
+      app: todoapp
   template:
     metadata:
       labels:
-        app: todoapp-dep
+        app: todoapp
     spec:
       containers:
         - name: todoapp
-          image: todo_app:1.5
+          image: todoapp:1.6
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
               value: "8081"
+          ports:
+            - containerPort: 8081
+              protocol: TCP
