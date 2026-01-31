@@ -1,25 +1,30 @@
-# todoapp 1.5
+# todoapp 1.6
 
 ### How to run
 
 Build the docker image:
 ```
-docker build -t todo_app:1.5 .
+docker build -t todo_app:1.6 .
+```
+Create a cluster with an exposed `node port` and also set a `target port` for the load balancer:
+
+```
+k3d cluster create --port 8082:30080@agent:0 -p 8081:80@loadbalancer --agents 2
 ```
 
-Import image to k3d cluster if needed:
+Import image to k3d cluster:
 ```
-k3d image import todo_app:1.5 -c k3s-default
+k3d image import todo_app:1.6 -c k3s-default
 ```
 
-Set a desired value to PORT environment variable by editing the deployment manifest:
+Make sure the PORT environment variable matches the loadbalancer target port by editing the deployment manifest:
 ```yaml
 ...
 
 spec:
       containers:
         - name: todoapp
-          image: todo_app:1.5
+          image: todo_app:1.6
           imagePullPolicy: IfNotPresent
           env:
             - name: PORT
@@ -33,12 +38,10 @@ Create a deployment for the image to the cluster using deployment manifest:
 kubectl apply -f manifests/deployment.yaml
 ```
 
-Check the deployment pod `name`:
+And finally create a NodePort Service for the deployment with the new service manifest:
+
 ```
-kubectl get pods
+kubectl apply -f manifests/service.yaml
 ```
 
-And finally expose the app port:
-```
-kubectl port-forward {pod name} 8080:8081
-```
+Index page should now be accessible on exposed node port (8082 in the above example).
