@@ -1,7 +1,19 @@
-FROM eclipse-temurin:21-jdk-alpine
+# ---------- Build Stage -----------
+FROM eclipse-temurin:21-jdk-alpine AS build
 
-WORKDIR /log_output
+WORKDIR /build
 
-COPY target/log-output-1.1.jar log-output.jar
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
 
-ENTRYPOINT ["java","-jar","log-output.jar"]
+RUN ./mvnw -B dependency:go-offline
+COPY src src
+RUN ./mvnw -B package
+RUN ls -l
+
+# ---------- Runtime stage ----------
+FROM eclipse-temurin:21-jre-alpine
+WORKDIR /log-output
+COPY --from=build /build/target/*.jar app.jar
+ENTRYPOINT ["java","-jar","app.jar"]
