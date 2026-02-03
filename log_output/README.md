@@ -1,24 +1,18 @@
 # Log Output App (Spring Boot)
 Build the docker image:
 ```
-docker build -t log_output:latest .
+docker build -t log_output:1.7 .
+```
+
+Import image to cluster
+```
+k3d image import log_output:1.7
+```
+
+Deploy `deployment`, `ingress` and `service` by applying all manifests:
+```
+kubectl apply -f manifests
 ```
 <br>
 
-Deploy to a cluster by using the new deployment manifest file
-```
-kubectl apply -f manifests/deployment.yaml
-```
-
-<br>
-
-Check the deployment pod's `name`:
-```
-kubectl get pods
-```
-<br>
-
-And finally to see the output logs inside the pod:
-```
-kubectl logs -f {$POD_NAME}
-```
+Now you can access the hash output from the browser at _http://localhost:8081/_
