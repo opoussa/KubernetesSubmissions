@@ -14,5 +14,5 @@ spec:
     spec:
       containers:
         - name: pingpong
-          image: pingpong:new
+          image: pingpong:latest
           imagePullPolicy: IfNotPresent
