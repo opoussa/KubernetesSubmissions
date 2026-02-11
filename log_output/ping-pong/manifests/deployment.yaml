@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: hashgenerator-dep
+  name: pingpong-dep
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: hashgenerator
+      app: pingpong
   template:
     metadata:
       labels:
-        app: hashgenerator
+        app: pingpong
     spec:
       containers:
-        - name: hashgenerator
-          image: log_output:1.7
+        - name: pingpong
+          image: pingpong:new
           imagePullPolicy: IfNotPresent
