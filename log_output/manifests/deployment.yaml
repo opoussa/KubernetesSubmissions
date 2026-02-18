@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hashgenerator-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hashgenerator
+  template:
+    metadata:
+      labels:
+        app: hashgenerator
+    spec:
+      volumes: # Define volume
+          - name: shared
+            emptyDir: {}
+      containers:
+        - name: write-service
+          image: write-service:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts: # Mount volume
+          - name: shared
+            mountPath: /shared
+          env:
+          - name: SHARED_FOLDER_PATH
+            value: /shared/logs.txt
+        
+        - name: read-service
+          image: read-service:latest
+          imagePullPolicy: IfNotPresent
+          volumeMounts: # Mount volume
+          - name: shared
+            mountPath: /shared
+          env:
+          - name: SHARED_FOLDER_PATH
+            value: /shared/logs.txt
