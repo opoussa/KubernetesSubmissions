@@ -15,19 +15,15 @@ public class ReadService {
     private String sharedPath;
     
     public String readCurrentHash() throws IOException {
-        String logEntry = readLogs();
-        String pingEntry = readPings();
-        
-        return logEntry + "\n" 
-        + "Ping / Pongs: "+ pingEntry;
-    }
-
-    private String readLogs() throws IOException {
         String path = sharedPath + "logs.txt";
         System.out.println("Reading logs from: " + path);
 
         Path file = Path.of(path);
 
+        if(!Files.exists(file)) {
+            return "No log entries yet.";
+        }
+        
         List<String> lines = Files.readAllLines(file);
         int lineAmount = lines.size();
 
@@ -39,8 +35,8 @@ public class ReadService {
         
         }
     }
-    // TODO : Cannot read pings
-    private String readPings() throws IOException {
+
+    public String readPings() throws IOException {
         String path = sharedPath + "pings.txt";
         System.out.println("Reading lines from: " + path);
 
