@@ -25,7 +25,7 @@ public class WriteComponent {
             String line = Instant.now() + ": " + random;
             String lineToWrite = line + System.lineSeparator();
 
-            Path file = Path.of(sharedPath);
+            Path file = Path.of(sharedPath + "logs.txt");
 
             // Ensure parent directory exists
             Files.createDirectories(file.getParent());
