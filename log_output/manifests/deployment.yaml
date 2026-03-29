@@ -12,26 +12,30 @@ spec:
       labels:
         app: hashgenerator
     spec:
-      volumes: # Define volume
-          - name: shared
-            emptyDir: {}
       containers:
+      # Write service -----
         - name: write-service
           image: write-service:latest
           imagePullPolicy: IfNotPresent
           volumeMounts: # Mount volume
-          - name: shared
+          - name: logoutput-claim
             mountPath: /shared
           env:
           - name: SHARED_FOLDER_PATH
-            value: /shared/logs.txt
-        
+            value: /shared/
+      # Read service -----
         - name: read-service
           image: read-service:latest
           imagePullPolicy: IfNotPresent
           volumeMounts: # Mount volume
-          - name: shared
+          - name: logoutput-claim
             mountPath: /shared
           env:
           - name: SHARED_FOLDER_PATH
-            value: /shared/logs.txt
+            value: /shared/
+          
+      # Volumes -----
+      volumes:
+        - name: logoutput-claim
+          persistentVolumeClaim:
+            claimName: logoutput-claim
