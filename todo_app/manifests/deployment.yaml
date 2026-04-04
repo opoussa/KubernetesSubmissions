@@ -19,6 +19,15 @@ spec:
           env:
             - name: PORT
               value: "8081"
+            - name: IMAGE_FILE_PATH
+              value: /app/images/
           ports:
             - containerPort: 8081
               protocol: TCP
+          volumeMounts:
+            - name: todoapp-claim
+              mountPath: /app
+      volumes:
+        - name: todoapp-claim
+          persistentVolumeClaim:
+            claimName: todoapp-claim
