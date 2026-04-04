@@ -5,8 +5,6 @@ FROM eclipse-temurin:21-jdk-alpine AS build
 
 WORKDIR /build
 
-ARG PORT=8080
-ENV PORT=${PORT}
 COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
@@ -25,8 +23,6 @@ RUN ./mvnw -B package
 FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /todo_app
-
-ENV PORT=${PORT}
 
 COPY --from=build /build/target/todo_app-1.2.jar app.jar
 
