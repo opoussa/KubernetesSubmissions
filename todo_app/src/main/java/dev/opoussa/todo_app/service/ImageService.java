@@ -15,13 +15,16 @@ public class ImageService {
     @Value("${image.file.path}")
     String imageFilePath;
 
+    private static final String IMAGE_URL_PREFIX = "https://picsum.photos/id/", IMAGE_URL_SUFFIX = "/200/300";
+
     public String getImageUrl() throws IOException {
         var fileContent = readImageFile();
         var lastModifiedTime = getImageLastModifiedTime(fileContent);
 
         var imgUrl = fileContent.split("\\R")[0];
         System.out.println("Image url: " + imgUrl);
-        if (TimeUtil.minutesHavePassed(lastModifiedTime, 10)) {
+        var has10minPassed = TimeUtil.minutesHavePassed(lastModifiedTime, 10);
+        if (has10minPassed) {
             System.out
                     .println("More than 10 minutes have passed since the image was last modified. Updating image URL.");
             writeNewImageUrlToFile();
@@ -30,9 +33,11 @@ public class ImageService {
     }
 
     private void writeNewImageUrlToFile() throws IOException {
-        int newPicNumber = (int) (Math.random() * (2000)) + 1;
-        System.out.println("Writing new image URL to file: https://picsum.photos/" + newPicNumber);
-        String newContent = "https://picsum.photos/" + newPicNumber + System.lineSeparator()
+        int newPicNumber = (int) (Math.random() * (200)) + 1;
+        var url = IMAGE_URL_PREFIX + newPicNumber + IMAGE_URL_SUFFIX;
+        System.out.println("New image url: " + url);
+        
+        String newContent = url + System.lineSeparator()
                 + System.currentTimeMillis();
 
         Path file = Path.of(imageFilePath + "imageSrc.txt");
@@ -50,8 +55,10 @@ public class ImageService {
         Path file = Path.of(path);
 
         if (Files.exists(file)) {
-            String content = Files.readString(file);
-            return content.trim();
+            System.out.println("File exists. Reading content..");
+            String content = Files.readString(file)
+                .trim();
+            return content;
         } else {
             writeNewImageUrlToFile();
             return readImageFile();
