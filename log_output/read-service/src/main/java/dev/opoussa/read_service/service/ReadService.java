@@ -5,8 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import dev.opoussa.read_service.client.IPingClient;
 
 @Service
 public class ReadService {
@@ -14,8 +17,11 @@ public class ReadService {
     @Value("${shared.folder.path}")
     private String sharedPath;
     
+    @Autowired
+    private IPingClient pingClient;
+
     public String readCurrentHash() throws IOException {
-        String path = sharedPath + "logs.txt";
+         String path = sharedPath + "logs.txt";
         System.out.println("Reading logs from: " + path);
 
         Path file = Path.of(path);
@@ -37,16 +43,7 @@ public class ReadService {
     }
 
     public String readPings() throws IOException {
-        String path = sharedPath + "pings.txt";
-        System.out.println("Reading lines from: " + path);
-
-        Path file = Path.of(path);
-
-        if (Files.exists(file)) {
-            String content = Files.readString(file);
-            return content.trim();
-        } else {
-            return "No ping entries yet.";
-        }
+        System.out.println("Calling ping service...");
+        return pingClient.getPingPongAmount();
     }
 }
