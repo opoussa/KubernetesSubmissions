@@ -21,7 +21,7 @@ public class ReadService {
     private IPingClient pingClient;
 
     public String readCurrentHash() throws IOException {
-         String path = sharedPath + "logs.txt";
+        String path = sharedPath + "logs.txt";
         System.out.println("Reading logs from: " + path);
 
         Path file = Path.of(path);
