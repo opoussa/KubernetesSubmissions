@@ -16,13 +16,6 @@ spec:
         - name: pingpong
           image: pingpong:latest
           imagePullPolicy: IfNotPresent
-          #volumeMounts:
-          #- name: logoutput-claim
-           # mountPath: /shared
           env:
           - name: SHARED_FOLDER_PATH
             value: /shared/
-      #volumes:
-        #- name: logoutput-claim
-        #  persistentVolumeClaim:
-         #   claimName: logoutput-claim
