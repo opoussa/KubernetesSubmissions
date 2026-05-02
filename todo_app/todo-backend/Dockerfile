@@ -22,8 +22,8 @@ RUN ./mvnw -B package
 # ---------- Runtime stage ----------
 FROM eclipse-temurin:21-jre-alpine
 
-WORKDIR /todo_app
+WORKDIR /todo-backend
 
-COPY --from=build /build/target/todo_app-1.2.jar app.jar
+COPY --from=build /build/target/todo-backend-0.0.1.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
