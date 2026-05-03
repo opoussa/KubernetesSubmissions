@@ -9,8 +9,8 @@ spec:
   volumeMode: Filesystem # This declares that it will be mounted into pods as a directory
   accessModes:
   - ReadWriteOnce # Only for todoapp
-  local:
-    path: /tmp/kube
+  hostPath: #local:
+    path: /tmp/kube 
   nodeAffinity: ## This is only required for local, it defines which nodes can access it
     required:
       nodeSelectorTerms:
