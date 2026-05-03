@@ -1,28 +1,26 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: hashgenerator-ingress
+  name: todoapp-ingress
   annotations:
-    traefik.ingress.kubernetes.io/router.entrypoints: web
+    traefik.ingress.kubernetes.io/router.middlewares: todo-strip@kubernetescrd
 spec:
   rules:
   - http:
       paths:
-      
-      # Log output
-      - path: /
-        pathType: Prefix
+      # Frontend
+      - path: /todo
+        pathType: Exact
         backend:
           service:
-            name: hashgenerator-svc
+            name: todoapp-svc
             port:
               number: 2345
-      
-      # Pingpong
-      - path: /pingpong
+      # Backend
+      - path: /todo-backend
         pathType: Prefix
         backend:
           service:
-            name: pingpong-svc
+            name: todo-backend-svc
             port:
               number: 2345
