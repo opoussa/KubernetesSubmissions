@@ -11,14 +11,12 @@
             style="width: 200px; height: auto;" 
             alt="Random image from the internet"
         >
-        <form>
+        <form th:action="@{/submit}" method="post">
             <input type="text" maxlength="140"/>
             <button type="submit">Create todo</button>
         </form>
-        <ul>
-            <li>Clean kitchen</li>
-            <li>Learn Kubernetes</li>
-            <li>Learn Terraform</li>
+        <ul th:each="todo : ${todos}">
+            <li th:text="${todo}"></li>
         </ul>
         <p>DevOps with Kubernetes 2026</p>
     </body>
