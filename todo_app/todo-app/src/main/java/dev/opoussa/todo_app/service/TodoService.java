@@ -15,13 +15,13 @@ public class TodoService {
         this.todoClient = todoClient;
     }
 
-    public void submitTodo(String todo) {
-        System.out.println("Submitting todo: " + todo);
-        todoClient.addTodo(todo);
-    }
-
     public List<String> getTodos() {
         var todos = todoClient.getTodos();
         return todos;
+    }
+
+    public void submitTodo(String todo) {
+        System.out.println("Submitting todo: " + todo);
+        todoClient.addTodo(todo);
     }
 }

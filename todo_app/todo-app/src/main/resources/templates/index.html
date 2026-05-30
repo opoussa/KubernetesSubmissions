@@ -12,7 +12,7 @@
             alt="Random image from the internet"
         >
         <form th:action="@{/submit}" method="post">
-            <input type="text" maxlength="140"/>
+            <input name="todo" type="text" maxlength="140"/>
             <button type="submit">Create todo</button>
         </form>
         <ul th:each="todo : ${todos}">
