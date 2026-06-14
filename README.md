@@ -18,3 +18,4 @@ Repository for Kubernetes MOOC exercise submissions (DevOps with Kubernetes).
 
 ### Chapter 3
 - [2.1.](https://github.com/opoussa/KubernetesSubmissions/tree/2.1/log_output)
+- [2.2.](https://github.com/opoussa/KubernetesSubmissions/tree/2.2/todo_app)
