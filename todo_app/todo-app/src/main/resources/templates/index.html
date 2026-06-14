@@ -11,7 +11,7 @@
             style="width: 200px; height: auto;" 
             alt="Random image from the internet"
         >
-        <form th:action="@{/submit}" method="post">
+        <form th:action="@{/todo/submit}" method="post">
             <input name="todo" type="text" maxlength="140"/>
             <button type="submit">Create todo</button>
         </form>
