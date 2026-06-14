@@ -8,7 +8,7 @@ spec:
       paths:
       # Frontend
       - path: /todo
-        pathType: Exact
+        pathType: Prefix
         backend:
           service:
             name: todoapp-svc

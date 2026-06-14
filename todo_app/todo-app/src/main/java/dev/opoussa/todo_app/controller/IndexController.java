@@ -9,10 +9,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
+@RequestMapping("/todo")
 public class IndexController {
     private final ImageService imageService;
     private final TodoService todoService;
@@ -22,7 +24,7 @@ public class IndexController {
         this.todoService = todoService;
     }
 
-    @GetMapping("/todo")
+    @GetMapping
     public String getIndex(Model model) throws IOException {
         var imageSrc = imageService.getImageUrl();
         var todos = todoService.getTodos();
@@ -32,7 +34,8 @@ public class IndexController {
     }
 
     @PostMapping("/submit")
-    public String submit(@RequestParam String todo) {   
+    public String submit(@RequestParam(defaultValue = "DEFAULT!") String todo) {   
+        System.out.println("CONTROLLER : Submitting todo: " + todo);
         todoService.submitTodo(todo);
         return "redirect:/todo";
     }
