@@ -34,7 +34,7 @@ public class IndexController {
     }
 
     @PostMapping("/submit")
-    public String submit(@RequestParam(defaultValue = "DEFAULT!") String todo) {
+    public String submit(@RequestParam String todo) {
         todoService.submitTodo(todo);
         return "redirect:/todo";
     }
