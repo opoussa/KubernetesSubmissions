@@ -3,13 +3,14 @@ package dev.opoussa.todo_app.service;
 import org.springframework.stereotype.Service;
 
 import dev.opoussa.todo_app.util.TimeUtil;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Value;
-
+@Slf4j
 @Service
 public class ImageService {
     @Value("${image.file.path}")
@@ -22,11 +23,10 @@ public class ImageService {
         var lastModifiedTime = getImageLastModifiedTime(fileContent);
 
         var imgUrl = fileContent.split("\\R")[0];
-        System.out.println("Image url: " + imgUrl);
+        log.info("Image url: {}", imgUrl);
         var has10minPassed = TimeUtil.minutesHavePassed(lastModifiedTime, 10);
         if (has10minPassed) {
-            System.out
-                    .println("More than 10 minutes have passed since the image was last modified. Updating image URL.");
+            log.info("More than 10 minutes have passed since the image was last modified. Updating image URL.");
             writeNewImageUrlToFile();
         }
         return imgUrl;
@@ -35,7 +35,7 @@ public class ImageService {
     private void writeNewImageUrlToFile() throws IOException {
         int newPicNumber = (int) (Math.random() * (140)) + 1;
         var url = IMAGE_URL_PREFIX + newPicNumber + IMAGE_URL_SUFFIX;
-        System.out.println("New image url: " + url);
+        log.info("New image url: {}", url);
         
         String newContent = url + System.lineSeparator()
                 + System.currentTimeMillis();
@@ -50,12 +50,12 @@ public class ImageService {
 
     private String readImageFile() throws IOException {
         String path = imageFilePath + "imageSrc.txt";
-        System.out.println("Reading lines from: " + path);
+        log.debug("Reading lines from: {}", path);
 
         Path file = Path.of(path);
 
         if (Files.exists(file)) {
-            System.out.println("File exists. Reading content..");
+            log.debug("File exists. Reading content..");
             String content = Files.readString(file)
                 .trim();
             return content;
@@ -72,7 +72,7 @@ public class ImageService {
         }
         try {
             Long lastModifiedTime = Long.parseLong(lines[1]);
-            System.out.println("Last modified time unix: " + lastModifiedTime);
+            log.debug("Last modified time unix: {}", lastModifiedTime);
             return lastModifiedTime;
         } catch (NumberFormatException e) {
             throw new RuntimeException("Invalid last modified time format.");

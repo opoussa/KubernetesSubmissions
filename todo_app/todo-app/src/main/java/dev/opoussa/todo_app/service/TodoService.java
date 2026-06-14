@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import dev.opoussa.todo_app.client.ITodoClient;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Service
 public class TodoService {
     
@@ -21,7 +22,7 @@ public class TodoService {
     }
 
     public void submitTodo(String todo) {
-        System.out.println("Submitting todo: " + todo);
+        log.info("Submitting todo: {}", todo);
         todoClient.addTodo(todo);
     }
 }

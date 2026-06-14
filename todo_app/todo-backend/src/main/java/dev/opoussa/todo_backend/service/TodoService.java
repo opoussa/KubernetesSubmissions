@@ -15,7 +15,6 @@ public class TodoService {
     }
 
     public void addTodo(String todo) {
-        System.out.println("Received todo: " + todo);
         todos.add(todo);
     }
     
