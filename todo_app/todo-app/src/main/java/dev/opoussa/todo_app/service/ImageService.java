@@ -33,7 +33,7 @@ public class ImageService {
     }
 
     private void writeNewImageUrlToFile() throws IOException {
-        int newPicNumber = (int) (Math.random() * (200)) + 1;
+        int newPicNumber = (int) (Math.random() * (140)) + 1;
         var url = IMAGE_URL_PREFIX + newPicNumber + IMAGE_URL_SUFFIX;
         System.out.println("New image url: " + url);
         
