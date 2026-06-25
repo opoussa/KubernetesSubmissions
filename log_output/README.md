@@ -1,28 +1,20 @@
-# 2.1. Connecting pods (Spring Boot)
-### Connection via HTTP
-Read service now gets ping-pong count from ping-pong service through a HTTP request.
+# 2.3. Keep them separated
+### New Namespace
+Log output and pingpong services now live in the own namespace `exercises`
 
-```java
-// Read controller's HTTP client
-@HttpExchange(url = "http://pingpong-svc:2345")
-public interface IPingClient {
+Namespace has been added to the metadata of services, deployments and the ingress.
 
-    @GetExchange("/amount")
-    public String getPingPongAmount();
-}
+```yaml
+...
+metadata:
+  name: pingpong-dep
+  namespace: exercises
+...
 ```
-```java
-// Ping-pong service's HTTP endpoint
-@GetMapping("/amount")
-public String getMethodName() {
-    return pingService.getPingPongCount();
-}
-```
-
-Ping-pong service does not know about the persistent volume now, and stores ping-pong count in memory instead.
-
 
 ### How to run
+Create and select new namespace `exercises` as kubectl context
+
 Apply `Persistent Volume` and `Claim` for read and write services from the volume folder:
 ```
 kubectl apply -f volumes
