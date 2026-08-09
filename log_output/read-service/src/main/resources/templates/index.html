@@ -4,6 +4,8 @@
         <title>Log Output</title>
     </head>
     <body>
+        <p>file content: <span th:text="${information}"></span></p>
+        <p>env variable: <span th:text="${message}"></span></p>
         <p th:text="${hash}">(Hash goes here)</p>
         <p>Ping / Pong count : <span th:text="${pongCount}"></span></p>
     </body>

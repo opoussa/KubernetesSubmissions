@@ -19,8 +19,12 @@ public class ReadController {
     public String getCurrentLog(Model model) throws IOException {
         var hash = readService.readCurrentHash();
         var pingPongs = readService.readPings();
+        var information = readService.readFromInformationTxt();
+        var MESSAGE = readService.readFromEnv();
         model.addAttribute("hash", hash);
         model.addAttribute("pongCount", pingPongs);
+        model.addAttribute("information", information);
+        model.addAttribute("message", MESSAGE);
         return "index";
     }
 }

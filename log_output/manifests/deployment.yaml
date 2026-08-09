@@ -31,12 +31,22 @@ spec:
           volumeMounts: # Mount volume
           - name: logoutput-claim
             mountPath: /shared
+          - name: config-volume
+            mountPath: /config
           env:
           - name: SHARED_FOLDER_PATH
             value: /shared/
+          - name: MESSAGE
+            valueFrom:
+              configMapKeyRef:
+                name: log-output-config
+                key: message.env
           
       # Volumes -----
       volumes:
         - name: logoutput-claim
           persistentVolumeClaim:
             claimName: logoutput-claim
+        - name: config-volume
+          configMap:
+            name: log-output-config
