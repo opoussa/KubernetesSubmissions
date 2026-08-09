@@ -1,21 +1,21 @@
-# 2.2. The project, step 8
+# 2.4. The project, step 9
 
-### Todo app now has a backend
-The app is now split into a frontend and a separate backend. Todos may be added and fetched to and from the backend using the form.
+### Project Namespace
+Todo app and its backend have been moved into namespace `project`
 
-Client calling the backend service:
+Namespace has been added to the metadata of services, deployments and the ingress.
+
+```yaml
+...
+metadata:
+  name: pingpong-dep
+  namespace: exercises
+...
 ```
-@HttpExchange(url = "http://todo-backend-svc:2345")
-public interface ITodoClient {
-    @GetExchange
-    public List<String> getTodos();
-
-    @PostExchange
-    public void addTodo(@RequestBody String todo);
-```
-
 
 ### How to run
+
+Create and select new namespace `project` as kubectl context
 
 Build the docker image:
 ```
