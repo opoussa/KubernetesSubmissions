@@ -24,6 +24,6 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /todo_frontend
 
-COPY --from=build /build/target/todo_frontend-1.2.jar app.jar
+COPY --from=build /build/target/app.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
