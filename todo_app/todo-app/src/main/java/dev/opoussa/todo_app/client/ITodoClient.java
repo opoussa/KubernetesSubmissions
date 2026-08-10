@@ -7,7 +7,8 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 import org.springframework.web.service.annotation.PostExchange;
 
-@HttpExchange(url = "http://todo-backend-svc:2345")
+
+@HttpExchange
 public interface ITodoClient {
     @GetExchange
     public List<String> getTodos();

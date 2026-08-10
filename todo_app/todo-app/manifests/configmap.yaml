@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: todo-app-config
+  namespace: project
+data:
+  PORT: "8081"
+  SHARED_FOLDER_PATH: "/shared/"
+  IMAGE_FILE_PATH: "/app/images/"
+  BACKEND_URL: "http://todo-backend-svc:2345"
+  IMAGE_API_URL: "https://picsum.photos/id/"

@@ -9,14 +9,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.springframework.beans.factory.annotation.Value;
 @Slf4j
 @Service
 public class ImageService {
-    @Value("${image.file.path}")
-    String imageFilePath;
 
-    private static final String IMAGE_URL_PREFIX = "https://picsum.photos/id/", IMAGE_URL_SUFFIX = "/200/300";
+    private final String IMAGE_FILE_PATH = System.getenv("IMAGE_FILE_PATH");
+    private static final String IMAGE_URL_PREFIX = System.getenv("IMAGE_API_URL"), IMAGE_URL_SUFFIX = "/200/300";
 
     public String getImageUrl() throws IOException {
         var fileContent = readImageFile();
@@ -40,16 +38,18 @@ public class ImageService {
         String newContent = url + System.lineSeparator()
                 + System.currentTimeMillis();
 
-        Path file = Path.of(imageFilePath + "imageSrc.txt");
+        Path file = Path.of(IMAGE_FILE_PATH + "imageSrc.txt");
         if (!Files.exists(file)) {
             Files.createDirectories(file.getParent());
             Files.createFile(file);
         }
+        log.info("Writing image url..");
         Files.writeString(file, newContent);
+        log.debug("Wrote into {}", file.toString());
     }
 
     private String readImageFile() throws IOException {
-        String path = imageFilePath + "imageSrc.txt";
+        String path = IMAGE_FILE_PATH + "imageSrc.txt";
         log.debug("Reading lines from: {}", path);
 
         Path file = Path.of(path);

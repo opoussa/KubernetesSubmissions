@@ -17,9 +17,9 @@ spec:
         - name: todo-backend
           image: todo-backend:latest
           imagePullPolicy: IfNotPresent
-          env:
-            - name: PORT
-              value: "8081"
+          envFrom:
+            - configMapRef:
+                name: todo-app-config
           ports:
             - containerPort: 8081
               protocol: TCP

@@ -8,6 +8,7 @@ import dev.opoussa.todo_app.client.ITodoClient;
 @Configuration
 @ImportHttpServices(
     basePackages = "dev.opoussa.todo_app.client",
-    types = ITodoClient.class
+    types = ITodoClient.class,
+    group = "todo-group"
 )
 public class HttpClientConfig {}

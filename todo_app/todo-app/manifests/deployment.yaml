@@ -17,11 +17,9 @@ spec:
         - name: todoapp
           image: todoapp:latest
           imagePullPolicy: IfNotPresent
-          env:
-            - name: PORT
-              value: "8081"
-            - name: IMAGE_FILE_PATH
-              value: /app/images/
+          envFrom:
+            - configMapRef:
+                name: todo-app-config
           ports:
             - containerPort: 8081
               protocol: TCP

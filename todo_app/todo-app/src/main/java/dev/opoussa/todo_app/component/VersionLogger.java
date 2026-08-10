@@ -20,5 +20,6 @@ public class VersionLogger {
     @EventListener(ApplicationReadyEvent.class)
     public void logVersion() {
         log.info("Running version {}", buildProperties.getVersion());
+        log.debug("Backend url: {}", System.getenv("BACKEND_URL"));
     }
 }
