@@ -16,10 +16,10 @@ public class VersionLogger {
     public VersionLogger(BuildProperties buildProperties) {
         this.buildProperties = buildProperties;
     }
-
     @EventListener(ApplicationReadyEvent.class)
     public void logVersion() {
         log.info("Running version {}", buildProperties.getVersion());
-        log.debug("Backend url: {}", System.getenv("BACKEND_URL"));
+        log.info("Backend URL: {}", System.getenv("BACKEND_URL"));
+        log.info("Image API url: {}", System.getenv("IMAGE_API_URL"));
     }
 }
