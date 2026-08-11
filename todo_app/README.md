@@ -1,18 +1,31 @@
-# 2.4. The project, step 9
+# 2.6. The project, step 10
 
-### Project Namespace
-Todo app and its backend have been moved into namespace `project`
-
-Namespace has been added to the metadata of services, deployments and the ingress.
-
-```yaml
-...
+### New ConfigMap
+New ConfigMap `todo-app-config` containing all environment variables for PORTs file paths and URIs:
+```
+apiVersion: v1
+kind: ConfigMap
 metadata:
-  name: pingpong-dep
-  namespace: exercises
-...
+  name: todo-app-config
+  namespace: project
+data:
+  PORT: "8081"
+  SHARED_FOLDER_PATH: "/shared/"
+  IMAGE_FILE_PATH: "/app/images/"
+  BACKEND_URL: "http://todo-backend-svc:2345"
+  IMAGE_API_URL: "https://picsum.photos/id/"
+```
+Frontend and backend deployments create environment variables from the ConfigMap:
+```
+spec:
+      containers:
+      ...
+        envFrom:
+          - configMapRef:
+              name: todo-app-config
 ```
 
+----
 ### How to run
 
 Create and select new namespace `project` as kubectl context
