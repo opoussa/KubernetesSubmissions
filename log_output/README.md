@@ -1,48 +1,71 @@
-# 2.5. Documentation and ConfigMaps
-### New ConfigMap created
-Created a ConfigMap from two files: `information.txt` & `message.env`
+# 2.7. Stateful applications
+### New PostgreSQL Stateful set and service created
+Initiated a PostgreSQL database to store pingpong count as a statefulSet with only one replica.
 
+ ```yaml
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: psql-stset
+  namespace: exercises
+spec:
+  serviceName: psql-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psqlapp
+  template:
+    metadata:
+      labels:
+        app: psqlapp
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: pingpong-config
 ```
-Name:         log-output-config
-Namespace:    exercises
-Labels:       <none>
-Annotations:  <none>
-Data
-====
-information.txt:
-----
-This is text from the file infromation.txt
 
-message.env:
-----
-MESSAGE=Hello from the environment variable!
-
-BinaryData
-====
-
-Events:  <none>
-```
-
-An env variable was configured into the logoutput deployment for the contents of `message.env`:
+Service to go with the statefulSet:
 ```yaml
-...
-env:
-  ...
-  - name: MESSAGE
-    valueFrom:
-      configMapKeyRef:
-        name: log-output-config
-        key: message.env
+apiVersion: v1
+kind: Service
+metadata:
+  name: psql-svc
+  namespace: exercises
+  labels:
+    app: psqlapp
+spec:
+  ports:
+  - port: 5432
+    name: web
+  clusterIP: None
+  selector:
+    app: psqlapp
 ```
+
+Pingpong app's environment variables including postgreSQL database properties were moved to a configmap:
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pingpong-config
+  namespace: exercises
+data:
+  POSTGRES_USER: "pingpong-app"
+  POSTGRES_PASSWORD: "boing!"
+  POSTGRES_DB: "pingpong"
+  POSTGRES_URL: "jdbc:postgresql://psql-svc:5432/pingpong"
+```
+
 ----
 ### How to run
 Create and select new namespace `exercises` as kubectl context
 
-Apply `Persistent Volume` and `Claim` for read and write services from the volume folder:
-```
-kubectl apply -f volumes
-```
-Apply `deployment` and `service` manifests from manifest folder (also in ping-pong subdirectory):
+Apply both log output and pingpong app and psql related manifests in their own folders respectively:
 ```
 kubectl apply -f manifests
 ```
