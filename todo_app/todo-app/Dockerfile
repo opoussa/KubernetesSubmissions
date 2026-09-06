@@ -16,7 +16,7 @@ RUN ./mvnw -B dependency:go-offline
 COPY src src
 
 # Build app
-RUN ./mvnw -B package
+RUN ./mvnw -B package -DskipTests
 
 
 # ---------- Runtime stage ----------

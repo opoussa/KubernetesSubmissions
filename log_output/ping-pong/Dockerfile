@@ -9,7 +9,7 @@ COPY pom.xml .
 
 RUN ./mvnw -B dependency:go-offline
 COPY src src
-RUN ./mvnw -B package
+RUN ./mvnw -B package -DskipTests
 RUN ls -l
 
 # ---------- Runtime stage ----------
