@@ -1,54 +1,96 @@
-# 2.6. The project, step 10
+# 2.8. The project, step 11
 
-### New ConfigMap
-New ConfigMap `todo-app-config` containing all environment variables for PORTs file paths and URIs:
-```
-apiVersion: v1
-kind: ConfigMap
+### PostgreSQL database implemented as a stateful set
+The todo-backend now stores todos into a postgreSQL table. The postgreSQL database is deployed as a stateful set with one replica at a time:
+```yaml
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: todo-app-config
+  name: todo-psql-stset
+  namespace: project
+spec:
+  serviceName: psql-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psqlapp
+  template:
+    metadata:
+      labels:
+        app: psqlapp
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: postgres-credentials
+          ports:
+            - name: web
+              containerPort: 5432
+          volumeMounts:
+            - name: psql-data-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: psql-data-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi
+```
+Service to go along with the statefulSet:
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: todo-psql-svc
+  namespace: project
+  labels:
+    app: psqlapp
+spec:
+  ports:
+  - port: 5432
+    name: web
+  clusterIP: None
+  selector:
+    app: psqlapp
+```
+Postgres configuration env values implemented as base64 encoded Secrets:
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: postgres-credentials
   namespace: project
 data:
-  PORT: "8081"
-  SHARED_FOLDER_PATH: "/shared/"
-  IMAGE_FILE_PATH: "/app/images/"
-  BACKEND_URL: "http://todo-backend-svc:2345"
-  IMAGE_API_URL: "https://picsum.photos/id/"
-```
-Frontend and backend deployments create environment variables from the ConfigMap:
-```
-spec:
-      containers:
-      ...
-        envFrom:
-          - configMapRef:
-              name: todo-app-config
+  POSTGRES_USER: dG9kby1iYWNrZW5k
+  POSTGRES_PASSWORD: d2hhdHRvZG93aGF0dG9kbw==
+  POSTGRES_DB: dG9kb2Ri
+  POSTGRES_URL: amRiYzpwb3N0Z3Jlc3FsOi8vdG9kby1wc3FsLXN2Yzo1NDMyL3RvZG9kYg==
 ```
 
 ----
 ### How to run
 
-Create and select new namespace `project` as kubectl context
+Select namespace `project` as kubectl context
 
-Build the docker image:
+Build the docker images:
 ```
-docker build -t todo_app .
+docker build -t todoapp .
+docker build -t todo-backend .
 ```
 
-Import image to k3d cluster:
+Import images to k3d cluster:
 ```
 k3d image import todo_app
 ```
-Apply new persistent volume and the persistent volume claim:
-
-```
-kubectl apply -f volumes
-```
-
-Apply new deployment to cluster:
-
+Apply new statefulSet, service and configs from backend folder:
 ```
 kubectl apply -f manifests
 ```
 
-Home page with random image and input form should now be visible at _http://localhost:8081/_
+Home page with random image and input form should now be visible at _http://localhost:8081/todo_
