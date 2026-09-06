@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: psql-svc
+  namespace: exercises
+  labels:
+    app: psqlapp
+spec:
+  ports:
+  - port: 5432
+    name: web
+  clusterIP: None
+  selector:
+    app: psqlapp

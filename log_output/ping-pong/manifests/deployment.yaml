@@ -17,6 +17,6 @@ spec:
         - name: pingpong
           image: pingpong:latest
           imagePullPolicy: IfNotPresent
-          env:
-          - name: SHARED_FOLDER_PATH
-            value: /shared/
+          envFrom:
+            - configMapRef:
+                name: pingpong-config

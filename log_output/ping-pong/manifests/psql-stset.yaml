@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: psql-stset
+  namespace: exercises
+spec:
+  serviceName: psql-svc
+  replicas: 1
+  selector:
+    matchLabels:
+      app: psqlapp
+  template:
+    metadata:
+      labels:
+        app: psqlapp
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: pingpong-config
+          ports:
+            - name: web
+              containerPort: 5432
+          volumeMounts:
+            - name: psql-data-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: psql-data-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 100Mi

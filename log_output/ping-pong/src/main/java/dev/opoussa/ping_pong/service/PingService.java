@@ -1,17 +1,23 @@
 package dev.opoussa.ping_pong.service;
 import org.springframework.stereotype.Service;
+
+import dev.opoussa.ping_pong.repository.PingPongRepository;
 @Service
 public class PingService {
 
-    private static int pingPongCount = 0;
+    private final PingPongRepository repository;
+
+    public PingService(PingPongRepository pingPongRepository) {
+        this.repository = pingPongRepository;
+    }
     
     public void logPingPongCount() {
-        pingPongCount++;
-        System.out.println("Ping pong count increased. Current count: " + pingPongCount);
+        Integer count = repository.incrementCount();
+        System.out.println("Ping pong count increased. Current count: " + count);
     }
 
     public String getPingPongCount() {
        System.out.println("Ping pong count requested.");
-       return String.valueOf(pingPongCount);
+       return repository.getCount().toString();
     }
 }
