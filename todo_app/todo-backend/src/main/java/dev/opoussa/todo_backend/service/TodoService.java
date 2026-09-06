@@ -1,21 +1,32 @@
 package dev.opoussa.todo_backend.service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import dev.opoussa.todo_backend.entity.Todo;
+import dev.opoussa.todo_backend.repository.TodoRepository;
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j 
 public class TodoService {
+    private TodoRepository repository;
 
-    private static List<String> todos = new ArrayList<>();
-
-    public List<String> getTodos() {
-        return todos;
+    public TodoService(TodoRepository repository) {
+        this.repository = repository;
     }
 
-    public void addTodo(String todo) {
-        todos.add(todo);
+    public List<String> getTodos() {
+        log.info("Fetching all todos");
+        return repository.findAll().stream()
+            .map(Todo::getText)
+            .toList();
+    }
+
+    public void addTodo(String text) {
+        log.info("Adding new todo with text {}", text);
+        repository.save(new Todo(text));
     }
     
 }
