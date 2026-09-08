@@ -30,10 +30,13 @@ build/
 !**/src/test/**/build/
 
 ### VS Code ###
-.vscode/
+### .vscode/
 
 # env
 .env
 
 # Vi
 *.swp
+
+# Shared folder of apps
+**/shared

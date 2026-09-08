@@ -1,0 +1,78 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        // Project
+        {
+            "type": "java",
+            "name": "Debug Todo App",
+            "request": "launch",
+            "mainClass": "dev.opoussa.todo_app.TodoAppApplication",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/todo_app/todo-app/.env"
+        },
+        {
+            "type": "java",
+            "name": "Debug Todo Backend",
+            "request": "launch",
+            "mainClass": "dev.opoussa.todo_backend.TodoBackendApplication",
+            "projectName": "todo-backend",
+            "cwd": "${workspaceFolder}/todo_app/todo-backend",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/todo_app/todo-backend/.env"
+        },
+
+        // Log output exercises
+        {
+            "type": "java",
+            "name": "Debug Write Service",
+            "request": "launch",
+            "mainClass": "dev.opoussa.write_service.WriteServiceApplication",
+            "projectName": "write-service",
+            "cwd": "${workspaceFolder}/log_output/write-service",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/log_output/write-service/.env"
+        },
+        {
+            "type": "java",
+            "name": "Debug Read Service",
+            "request": "launch",
+            "mainClass": "dev.opoussa.read_service.ReadServiceApplication",
+            "projectName": "read-service",
+            "cwd": "${workspaceFolder}/log_output/read-service",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/log_output/read-service/.env"
+        },
+        {
+            "type": "java",
+            "name": "Debug Ping Pong",
+            "request": "launch",
+            "mainClass": "dev.opoussa.ping_pong.PingPongApplication",
+            "projectName": "ping-pong",
+            "cwd": "${workspaceFolder}/log_output/ping-pong",
+            "console": "internalConsole",
+            "envFile": "${workspaceFolder}/log_output/ping-pong/.env"
+        }
+
+        // Exercises
+        
+    ],
+    "compounds": [
+        {
+            "name": "Debug Todo Frontend and Backend",
+            "configurations": [
+                "Debug Todo App",
+                "Debug Todo Backend"
+            ],
+            "stopAll": true
+        },
+        {
+            "name": "Debug Log Output Services",
+            "configurations": [
+                "Debug Write Service",
+                "Debug Read Service",
+                "Debug Ping Pong"
+            ],
+            "stopAll": true
+        }
+    ]
+}
