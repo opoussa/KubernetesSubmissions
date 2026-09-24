@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata: 
+  name: add-article
+  namespace: project
+spec:
+  schedule: "0 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: add-article
+              image: add-article:latest
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: todo-app-config
+          restartPolicy: Never
+          
