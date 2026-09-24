@@ -1,76 +1,45 @@
-# 2.8. The project, step 11
+# 2.9 The project, step 12
 
-### PostgreSQL database implemented as a stateful set
-The todo-backend now stores todos into a postgreSQL table. The postgreSQL database is deployed as a stateful set with one replica at a time:
+### New CronJob created
+A new CronJob that posts a todo every hour with a link to a random Wikipedia article was created:
 ```yaml
-apiVersion: apps/v1
-kind: StatefulSet
-metadata:
-  name: todo-psql-stset
+apiVersion: batch/v1
+kind: CronJob
+metadata: 
+  name: add-article
   namespace: project
 spec:
-  serviceName: psql-svc
-  replicas: 1
-  selector:
-    matchLabels:
-      app: psqlapp
-  template:
-    metadata:
-      labels:
-        app: psqlapp
+  schedule: "0 * * * *"
+  jobTemplate:
     spec:
-      containers:
-        - name: postgres
-          image: postgres:16
-          imagePullPolicy: IfNotPresent
-          envFrom:
-            - secretRef:
-                name: postgres-credentials
-          ports:
-            - name: web
-              containerPort: 5432
-          volumeMounts:
-            - name: psql-data-storage
-              mountPath: /var/lib/postgresql/data
-  volumeClaimTemplates:
-    - metadata:
-        name: psql-data-storage
-      spec:
-        accessModes: ["ReadWriteOnce"]
-        storageClassName: local-path
-        resources:
-          requests:
-            storage: 100Mi
+      template:
+        spec:
+          containers:
+            - name: add-article
+              image: add-article:latest
+              imagePullPolicy: IfNotPresent
+              envFrom:
+                - configMapRef:
+                    name: todo-app-config
+          restartPolicy: Never
 ```
-Service to go along with the statefulSet:
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: todo-psql-svc
-  namespace: project
-  labels:
-    app: psqlapp
-spec:
-  ports:
-  - port: 5432
-    name: web
-  clusterIP: None
-  selector:
-    app: psqlapp
-```
-Postgres configuration env values implemented as base64 encoded Secrets:
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: postgres-credentials
-  namespace: project
-data:
-  POSTGRES_USER: dG9kby1iYWNrZW5k
-  POSTGRES_PASSWORD: d2hhdHRvZG93aGF0dG9kbw==
-  POSTGRES_DB: dG9kb2Ri
-  POSTGRES_URL: amRiYzpwb3N0Z3Jlc3FsOi8vdG9kby1wc3FsLXN2Yzo1NDMyL3RvZG9kYg==
+The job runs a bash script pulling a random wikipedia article from https://en.wikipedia.org/wiki/Special:Random:
+```bash
+#!/usr/bin/env bash
+
+: "${BACKEND_URL:?BACKEND_URL must be set}"
+
+location=$(curl --silent --show-error --dump-header - --output /dev/null \
+	https://en.wikipedia.org/wiki/Special:Random \
+	| awk 'BEGIN { IGNORECASE = 1 } /^location:/ { sub(/\r$/, "", $2); print $2; exit }')
+
+article_url="https:${location}"
+printf '%s\n' "$article_url"
+
+curl --fail --silent --show-error \
+	--header 'Content-Type: text/plain; charset=utf-8' \
+	--data-raw "Read this article: $article_url" \
+	"$BACKEND_URL"
 ```
 
 ----
@@ -78,19 +47,18 @@ data:
 
 Select namespace `project` as kubectl context
 
-Build the docker images:
+Build the script docker image:
 ```
-docker build -t todoapp .
-docker build -t todo-backend .
-```
-
-Import images to k3d cluster:
-```
-k3d image import todo_app
-```
-Apply new statefulSet, service and configs from backend folder:
-```
-kubectl apply -f manifests
+docker build -t add-article .
 ```
 
-Home page with random image and input form should now be visible at _http://localhost:8081/todo_
+Import image to k3d cluster:
+```
+k3d image import add-article:latest
+```
+Apply new CronJob with other manifests from todo-app folder:
+```
+kubectl apply -f /todo-app/manifests
+```
+
+Home page with a random wikipedia article listed should now be visible at _http://localhost:8081/todo_. If not, check back on the next clock hour.
